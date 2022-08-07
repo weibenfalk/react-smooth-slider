@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 type Props = {
   zoomFactor: number;
@@ -37,14 +37,14 @@ export const StyledSliderItem = styled.div<Props>`
   }
 
   :hover ~ * {
-    transform: translateX(${(props) => props.zoomFactor / 2 + '%'}) !important;
+    transform: translateX(${(props) => props.zoomFactor / 2 + "%"}) !important;
   }
 
   &.left {
     transform-origin: left;
 
     :hover ~ * {
-      transform: translateX(${(props) => props.zoomFactor + '%'}) !important;
+      transform: translateX(${(props) => props.zoomFactor + "%"}) !important;
     }
   }
 

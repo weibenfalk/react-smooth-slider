@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 // Components
-import SliderItem from './SliderItem';
+import SliderItem from "./SliderItem";
 // Styles
-import { StyledSliderWrapper, StyledSlider } from './SliderStyles';
+import { StyledSliderWrapper, StyledSlider } from "./SliderStyles";
 // Types
 type SliderProps = {
   children?: any;
@@ -24,12 +24,12 @@ const Slider: React.FC<SliderProps> = ({
   zoomFactor,
   slideMargin,
   maxVisibleSlides,
-  pageTransition
+  pageTransition,
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [transformValue, setTransformValue] = useState(`-${zoomFactor / 2}%`);
   const [scrollSize, setScrollSize] = useState(0);
-  
+
   const sliderRef = useRef<HTMLElement>(null);
 
   const visibleSlides = numberOfSlides(maxVisibleSlides, scrollSize);
@@ -38,10 +38,10 @@ const Slider: React.FC<SliderProps> = ({
 
   useEffect(() => {
     //@ts-ignore
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setScrollSize(entries[0].contentRect.width);
     });
-    resizeObserver.observe(sliderRef.current);
+    resizeObserver.observe(sliderRef.current!);
   }, [sliderRef]);
 
   // Position slider on resize
@@ -57,9 +57,9 @@ const Slider: React.FC<SliderProps> = ({
   // Have to disable hover effect on slides when flipping page
   // Otherwise it will look ugly when mouse hovers over the slides
   const disableHoverEffect = () => {
-    if (sliderRef.current) sliderRef.current.style.pointerEvents = 'none';
+    if (sliderRef.current) sliderRef.current.style.pointerEvents = "none";
     setTimeout(() => {
-      if (sliderRef.current) sliderRef.current.style.pointerEvents = 'all';
+      if (sliderRef.current) sliderRef.current.style.pointerEvents = "all";
     }, pageTransition);
   };
 
@@ -74,7 +74,7 @@ const Slider: React.FC<SliderProps> = ({
   };
 
   const handleMouseOver = (id: number) => {
-    if (id % visibleSlides === 1) setTransformValue('0%'); // left
+    if (id % visibleSlides === 1) setTransformValue("0%"); // left
     if (id % visibleSlides === 0) setTransformValue(`-${zoomFactor}%`); // right
   };
 
@@ -83,8 +83,8 @@ const Slider: React.FC<SliderProps> = ({
   };
 
   const assignSlideClass = (index: number, visibleSlides: number) => {
-    const classes = ['right', 'left'];
-    return classes[index % visibleSlides] || '';
+    const classes = ["right", "left"];
+    return classes[index % visibleSlides] || "";
   };
 
   return (
@@ -113,15 +113,21 @@ const Slider: React.FC<SliderProps> = ({
         ))}
       </StyledSlider>
       {currentPage > 0 && (
-        <div className='button-wrapper back'>
-          <button className='button back' onClick={() => handleSlideMove(false)}>
+        <div className="button-wrapper back">
+          <button
+            className="button back"
+            onClick={() => handleSlideMove(false)}
+          >
             &#8249;
           </button>
         </div>
       )}
       {currentPage !== totalPages && (
-        <div className='button-wrapper forward'>
-          <button className='button forward' onClick={() => handleSlideMove(true)}>
+        <div className="button-wrapper forward">
+          <button
+            className="button forward"
+            onClick={() => handleSlideMove(true)}
+          >
             &#8250;
           </button>
         </div>
