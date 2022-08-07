@@ -14,13 +14,16 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   root: {
-    width: 320,
+    width: 300,
     background: "#0f1226",
     color: "#f8f8f8",
     fontFamily: "Poppins",
+    boxShadow: "8px 9px 13px 0px rgba(17,17,17,0.75)",
   },
   media: {
-    height: 150,
+    height: 0,
+    paddingTop: "75.25%", // 16:9,
+    marginTop: "30",
   },
 });
 
@@ -80,10 +83,12 @@ const CharacterCard: React.FC<Props> = ({ character }) => {
           <Chip
             key={ability}
             style={{
-              marginLeft: 3,
-              marginTop: 3,
-              marginBottom: 3,
+              marginLeft: 4,
+              marginTop: 4,
+              marginBottom: 4,
               marginRight: 0,
+              background: "#00b1ff",
+              color: "#f8f8f8",
             }}
             size="small"
             label={ability}

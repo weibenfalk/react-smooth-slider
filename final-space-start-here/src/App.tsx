@@ -4,11 +4,11 @@ import Dialog from "@material-ui/core/Dialog";
 // Components
 import Slider from "./components/Slider";
 import CharacterCard from "./components/CharacterCard";
-import { getAllJSDocTags } from "typescript";
+import * as IoIcons from "react-icons/io";
 
 const SliderProps = {
-  zoomFactor: 30, // How much the image should zoom on hover in percent
-  slideMargin: 10, // Margin on each side of slides
+  zoomFactor: 25, // How much the image should zoom on hover in percent
+  slideMargin: 8, // Margin on each side of slides
   maxVisibleSlides: 5,
   pageTransition: 500, // Transition when flipping pages
 };
@@ -39,6 +39,10 @@ const App: React.FC = () => {
   const [activeCharacter, setActiveCharacter] = useState<Character>(
     {} as Character
   );
+  const [arrowUp, setArrowUp] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const [isFilterActive, setIsFilterActive] = useState(false);
 
   const handleDialogOpen = (character: Character) => {
     setIsDialogOpen(true);
@@ -64,13 +68,41 @@ const App: React.FC = () => {
   };
 
   const renderTitle = () => {
-    if (listings) {
-      return <h1>Listings</h1>;
-    } else if (collections) {
-      return <h1>Collections</h1>;
-    } else {
-      return <h1>Releases</h1>;
-    }
+    return listings ? (
+      <h1>Listings</h1>
+    ) : collections ? (
+      <h1>Collections</h1>
+    ) : (
+      <h1>Releases</h1>
+    );
+  };
+
+  const handleDropdown = () => {
+    setArrowUp(!arrowUp);
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleFilterClick = () => {
+    setListingsActive(!listings);
+    setIsFilterActive(!isFilterActive);
+  };
+
+  const renderDropDownMenu = () => {
+    return (
+      <div className="dd-menu">
+        <ul className="dd-list">
+          {!isFilterActive ? (
+            <li onClick={handleFilterClick}>Show Active</li>
+          ) : (
+            <li onClick={handleFilterClick} style={{ color: "#00b1ff" }}>
+              Show All
+            </li>
+          )}
+          <li>Filter 2</li>
+          <li>Filter 3</li>
+        </ul>
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -84,6 +116,19 @@ const App: React.FC = () => {
 
   const earthlings = data.filter((c) => c.origin === "Earth");
   const living = data.filter((c) => c.status === "Alive");
+  const dead = data.filter((c) => c.status === "Deceased");
+
+  const filterActive = () => {
+    return (
+      <Slider {...SliderProps}>
+        {dead.map((character) => (
+          <div key={character.id} onClick={() => handleDialogOpen(character)}>
+            <img src={character.img_url} alt="character" />
+          </div>
+        ))}
+      </Slider>
+    );
+  };
 
   const renderListings = () => {
     return (
@@ -149,7 +194,23 @@ const App: React.FC = () => {
             Releases
           </button>
         </div>
-        <div className="section-title-container">{renderTitle()}</div>
+        <div className="title-and-menu">
+          <div className="section-title-container">
+            {renderTitle()}{" "}
+            {!arrowUp ? (
+              <IoIcons.IoIosArrowDown
+                onClick={handleDropdown}
+                className="down-arrow"
+              />
+            ) : (
+              <IoIcons.IoIosArrowUp
+                onClick={handleDropdown}
+                className="up-arrow"
+              />
+            )}
+          </div>
+          {dropdownVisible ? renderDropDownMenu() : null}
+        </div>
       </div>
       {listings ? (
         renderListings()
@@ -157,6 +218,8 @@ const App: React.FC = () => {
         renderCollections()
       ) : releases ? (
         renderReleases()
+      ) : isFilterActive ? (
+        filterActive()
       ) : (
         <div>Loading ...</div>
       )}
